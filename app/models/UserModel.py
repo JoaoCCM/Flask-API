@@ -5,11 +5,11 @@ class UserModel(db.Model):
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(80))
-    password = db.Column(db.String(80))
-    name = db.Column(db.String(80))
-    phone = db.Column(db.String(20))
-    gender = db.Column(db.String(10))
+    email = db.Column(db.String)
+    password = db.Column(db.String)
+    name = db.Column(db.String)
+    phone = db.Column(db.String)
+    gender = db.Column(db.String)
 
     def __init__(self, email, password, name, phone, gender):
         self.email = email
@@ -19,7 +19,10 @@ class UserModel(db.Model):
         self.gender = gender
 
     def __repr__(self):
-        return "<Name: {},".format(self.name)
+        return "id: {}, name: {}, email: {}".format(self.id, self.name, self.email)
+
+    def json(self):
+        return {'id': self.id,'name': self.name, 'email': self.email}
 
     @classmethod
     def save_data(self):
@@ -29,3 +32,13 @@ class UserModel(db.Model):
     @staticmethod
     def genHash(password):
         return sha256.hash(password)
+
+    @staticmethod
+    def getAllUsers():
+        users = UserModel.query.all()
+        res = []
+        for user in users:
+            obj = {'id': user.id, 'name': user.name, 'email': user.email}
+            res.append(obj)
+        return res
+

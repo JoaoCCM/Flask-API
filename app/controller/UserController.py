@@ -2,6 +2,7 @@ from flask import jsonify, request
 from flask_restful import reqparse
 from app import app
 from app.models.UserModel import UserModel, db
+from flask_jwt_extended import jwt_required
 
 parser = reqparse.RequestParser()
 parser.add_argument('email', type=str, required=True, help="Email field cannot be blank.")
@@ -28,6 +29,7 @@ def save():
         return jsonify(data), 500
 
 @app.route('/user/all', methods=['GET'])
+@jwt_required()
 def getUsers():
     try:
         construct = {'users': UserModel.getAllUsers()}

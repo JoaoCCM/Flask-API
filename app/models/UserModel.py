@@ -32,9 +32,13 @@ class UserModel(db.Model):
     @staticmethod
     def genHash(password):
         return sha256.hash(password)
-
+    
     @staticmethod
-    def getAllUsers():
+    def verify_hash(password, hash):
+        return sha256.verify(password, hash)
+
+    @classmethod
+    def getAllUsers(self):
         users = UserModel.query.all()
         res = []
         for user in users:
@@ -42,3 +46,6 @@ class UserModel(db.Model):
             res.append(obj)
         return res
 
+    @classmethod
+    def findEmail(self, email):
+        return UserModel.query.filter_by(email=email).first()
